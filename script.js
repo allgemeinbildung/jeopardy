@@ -1,6 +1,6 @@
 // --- CONFIGURATION ---
 const API_KEY_STORAGE_ITEM = 'wissensChampionApiKey_v2';
-const MODEL_NAME = 'gemini-1.5-flash-latest';
+const MODEL_NAME = 'gemini-2.0-flash';
 
 // --- DOM Elements ---
 const setupScreen = document.getElementById('setup-screen');
