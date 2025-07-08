@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABUjeopardy</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased">
+
+    <div id="setup-screen" class="setup-screen flex flex-col items-center justify-center p-4 sm:p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 mb-2">ABUjeopardy</h1>
+            <p class="text-xl text-indigo-300">AI Edition</p>
+        </div>
+        <div class="w-full max-w-2xl bg-gray-900/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700 shadow-2xl">
+            <h2 class="text-2xl font-semibold mb-6 text-center">Spiel einrichten</h2>
+            
+            <div class="mb-6">
+                <label for="api-key-input" class="block text-sm font-medium mb-2">1. Google AI API-Schlüssel</label>
+                <input type="password" id="api-key-input" placeholder="Fügen Sie hier Ihren API-Schlüssel ein" class="w-full bg-gray-800 border border-gray-600 rounded-md p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                <p class="text-xs text-gray-400 mt-1">Ihr Schlüssel wird nur in Ihrem Browser gespeichert. <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-indigo-400 hover:underline">Kostenlosen Schlüssel erhalten</a>.</p>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium mb-2">2. Inhalte für das Quiz bereitstellen</label>
+                <div class="tab-container">
+                    <div class="tab-header">
+                        <button class="tab-link active" data-tab="text-input-tab">Text einfügen</button>
+                        <button class="tab-link" data-tab="keywords-input-tab">Stichwörter verwenden</button>
+                    </div>
+                    <div id="text-input-tab" class="tab-content active">
+                        <textarea id="text-input" rows="8" placeholder="Fügen Sie hier Ihren Text ein, den die KI als Grundlage für das Quiz verwenden soll..." class="w-full bg-gray-800 border border-gray-600 rounded-md p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none"></textarea>
+                    </div>
+                    <div id="keywords-input-tab" class="tab-content">
+                        <input type="text" id="keywords-input" placeholder="Geben Sie Schlüsselwörter ein, z.B. 'Schweizer Geschichte, Zweiter Weltkrieg, Neutralität'" class="w-full bg-gray-800 border border-gray-600 rounded-md p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                        <p class="text-xs text-gray-400 mt-2">Die KI generiert Fragen und Antworten basierend auf diesen Stichwörtern.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="num-categories" class="block text-sm font-medium mb-2">Anzahl Kategorien</label>
+                    <input type="number" id="num-categories" value="5" min="2" max="8" class="w-full bg-gray-800 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                </div>
+                <div>
+                    <label for="num-questions" class="block text-sm font-medium mb-2">Fragen pro Kategorie</label>
+                    <input type="number" id="num-questions" value="5" min="3" max="7" class="w-full bg-gray-800 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label for="num-teams" class="block text-sm font-medium mb-2">Anzahl Teams</label>
+                <input type="number" id="num-teams" value="2" min="2" max="4" class="w-full bg-gray-800 border border-gray-600 rounded-md p-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+            </div>
+
+            <div id="team-name-inputs" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                </div>
+            
+            <button id="start-game-btn" class="btn btn-primary w-full py-3 text-lg mt-4">Spiel generieren & starten!</button>
+            
+            <div id="loading-indicator" class="hidden flex-col items-center mt-6">
+                <div class="loader"></div>
+                <p class="text-indigo-300 mt-3">KI analysiert die Inhalte und generiert dein Quiz...</p>
+            </div>
+
+            <p id="error-message" class="text-red-400 text-center mt-4"></p>
+        </div>
+    </div>
+
+    <div id="main-game-area" class="hidden">
+        <header class="p-4 border-b-2 border-gray-800">
+            <div class="container mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
+                <h1 class="text-3xl font-bold text-yellow-300">ABUjeopardy</h1>
+                <div id="scoreboard" class="flex flex-wrap gap-4 text-center justify-center"></div>
+            </div>
+        </header>
+
+        <details class="whiteboard-container p-4 bg-gray-900 border-b border-gray-800" open>
+            <summary id="whiteboard-toggle" class="text-xl font-bold text-center text-yellow-300 cursor-pointer select-none">Team Whiteboards <span class="toggle-arrow"></span></summary>
+            <div id="whiteboard-links" class="whiteboard-grid mt-4"></div>
+        </details>
+
+        <div id="game-screen" class="p-2 sm:p-4 md:p-8">
+            <main id="game-board" class="grid gap-2"></main>
+        </div>
+
+        <div id="question-screen-container" class="question-screen-container hidden fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex-col items-center justify-center p-4 text-center">
+            <div class="w-full max-w-4xl bg-indigo-900/50 p-6 sm:p-10 rounded-2xl shadow-2xl border-2 border-indigo-500">
+                <h2 id="question-category" class="text-xl sm:text-2xl font-semibold text-yellow-300 mb-4">Kategorie</h2>
+                <p id="question-text" class="text-2xl sm:text-4xl font-bold mb-8 min-h-[100px] flex items-center justify-center"></p>
+                <p id="answer-text" class="text-xl sm:text-2xl text-gray-200 hidden mb-8 whitespace-pre-wrap"></p>
+                
+                <div id="whiteboard-check-links" class="mt-6 flex flex-wrap justify-center gap-4 hidden"></div>
+
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <button id="reveal-answer-btn" class="btn btn-primary">Antwort anzeigen</button>
+                    <button id="back-to-board-btn" class="btn btn-secondary hidden">Zurück zum Spielbrett</button>
+                </div>
+            </div>
+            <div id="teacher-controls" class="mt-8 flex flex-wrap justify-center gap-4 hidden"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
