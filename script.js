@@ -233,8 +233,7 @@ async function initializeGame() {
         await generateWhiteboardLinks();
 
         // Pass the selected model to the generation function
-        const rawJson = await generateQuizWithGemini(apiKey, sourceContent, inputType, gameState.gameConfig.numCategories, gameState.gameC
-onfig.numQuestions, selectedModel);
+        const rawJson = await generateQuizWithGemini(apiKey, sourceContent, inputType, gameState.gameConfig.numCategories, gameState.gameConfig.numQuestions, selectedModel);
 
         if (!rawJson.subchapters || rawJson.subchapters.length === 0) {
             throw new Error("KI hat keine gültigen Kategorien ('subchapters') zurückgegeben.");
