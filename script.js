@@ -1,6 +1,5 @@
 // --- CONFIGURATION ---
 const API_KEY_STORAGE_ITEM = 'wissensChampionApiKey_v2';
-const MODEL_NAME = 'gemini-2.0-flash';
 
 // --- DOM Elements ---
 const setupScreen = document.getElementById('setup-screen');
@@ -10,6 +9,7 @@ const questionScreenContainer = document.getElementById('question-screen-contain
 
 const startGameBtn = document.getElementById('start-game-btn');
 const apiKeyInput = document.getElementById('api-key-input');
+const modelSelector = document.getElementById('model-selector'); // New element
 const textInput = document.getElementById('text-input');
 const keywordsInput = document.getElementById('keywords-input');
 const numCategoriesInput = document.getElementById('num-categories');
@@ -42,7 +42,8 @@ let gameState = {
 };
 
 // --- AI Integration ---
-async function generateQuizWithGemini(apiKey, sourceContent, inputType, numCategories, numQuestions) {
+// The function now accepts a modelName parameter
+async function generateQuizWithGemini(apiKey, sourceContent, inputType, numCategories, numQuestions, modelName) {
     let prompt;
 
     if (inputType === 'text') {
@@ -106,7 +107,8 @@ async function generateQuizWithGemini(apiKey, sourceContent, inputType, numCateg
             }
         }
     };
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
+    // The API URL is now built dynamically with the selected model
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
     const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -188,6 +190,9 @@ async function initializeGame() {
     }
     localStorage.setItem(API_KEY_STORAGE_ITEM, apiKey);
 
+    // Get the selected model from the dropdown
+    const selectedModel = modelSelector.value;
+
     const activeTab = document.querySelector('.tab-link.active').dataset.tab;
     const inputType = activeTab === 'text-input-tab' ? 'text' : 'keywords';
     const sourceContent = (inputType === 'text' ? textInput.value : keywordsInput.value).trim();
@@ -227,7 +232,9 @@ async function initializeGame() {
     try {
         await generateWhiteboardLinks();
 
-        const rawJson = await generateQuizWithGemini(apiKey, sourceContent, inputType, gameState.gameConfig.numCategories, gameState.gameConfig.numQuestions);
+        // Pass the selected model to the generation function
+        const rawJson = await generateQuizWithGemini(apiKey, sourceContent, inputType, gameState.gameConfig.numCategories, gameState.gameC
+onfig.numQuestions, selectedModel);
 
         if (!rawJson.subchapters || rawJson.subchapters.length === 0) {
             throw new Error("KI hat keine gültigen Kategorien ('subchapters') zurückgegeben.");
