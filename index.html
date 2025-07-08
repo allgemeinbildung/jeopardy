@@ -30,17 +30,19 @@
 
             <div class="mb-6">
                 <label class="block text-sm font-medium mb-2">2. Inhalte für das Quiz bereitstellen</label>
-                <div class="tab-container">
-                    <div class="tab-header">
-                        <button class="tab-link active" data-tab="text-input-tab">Text einfügen</button>
-                        <button class="tab-link" data-tab="keywords-input-tab">Stichwörter verwenden</button>
-                    </div>
-                    <div id="text-input-tab" class="tab-content active">
-                        <textarea id="text-input" rows="8" placeholder="Fügen Sie hier Ihren Text ein, den die KI als Grundlage für das Quiz verwenden soll..." class="w-full bg-gray-800 border border-gray-600 rounded-md p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none"></textarea>
-                    </div>
-                    <div id="keywords-input-tab" class="tab-content">
-                        <input type="text" id="keywords-input" placeholder="Geben Sie Schlüsselwörter ein, z.B. 'Schweizer Geschichte, Zweiter Weltkrieg, Neutralität'" class="w-full bg-gray-800 border border-gray-600 rounded-md p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
-                        <p class="text-xs text-gray-400 mt-2">Die KI generiert Fragen und Antworten basierend auf diesen Stichwörtern.</p>
+                <div id="content-selector" class="max-h-72 overflow-y-auto">
+                    <div class="tab-container">
+                        <div class="tab-header">
+                            <button class="tab-link active" data-tab="text-input-tab">Text einfügen</button>
+                            <button class="tab-link" data-tab="keywords-input-tab">Stichwörter verwenden</button>
+                        </div>
+                        <div id="text-input-tab" class="tab-content active">
+                            <textarea id="text-input" rows="8" placeholder="Fügen Sie hier Ihren Text ein, den die KI als Grundlage für das Quiz verwenden soll..." class="w-full bg-gray-800 border-none rounded-md p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none"></textarea>
+                        </div>
+                        <div id="keywords-input-tab" class="tab-content">
+                            <input type="text" id="keywords-input" placeholder="Geben Sie Schlüsselwörter ein, z.B. 'Schweizer Geschichte, Zweiter Weltkrieg, Neutralität'" class="w-full bg-gray-800 border-none rounded-md p-3 focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                            <p class="text-xs text-gray-400 mt-2">Die KI generiert Fragen und Antworten basierend auf diesen Stichwörtern.</p>
+                        </div>
                     </div>
                 </div>
             </div>
