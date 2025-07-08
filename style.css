@@ -1,0 +1,46 @@
+/* Add these new styles to the end of your style.css file */
+
+.tab-container {
+    border: 1px solid #374151;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.tab-header {
+    display: flex;
+    background-color: #1f2937;
+}
+
+.tab-link {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    background-color: transparent;
+    color: #9ca3af;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 2px solid transparent;
+}
+
+.tab-link:hover {
+    background-color: #374151;
+    color: #e5e7eb;
+}
+
+.tab-link.active {
+    color: #ffffff;
+    border-bottom-color: #4f46e5;
+}
+
+.tab-content {
+    display: none;
+    padding: 1rem;
+    background-color: #1f2937;
+    border-top: 1px solid #374151;
+}
+
+.tab-content.active {
+    display: block;
+}
